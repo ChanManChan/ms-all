@@ -1,0 +1,80 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+build:
+  #! local or googleCloudBuild
+  local:
+    push: false
+  # googleCloudBuild:
+  #   projectId: pacific-destiny-15416546
+  artifacts:
+    - image: nanda1995/auth
+      # image: us.gcr.io/pacific-destiny-15416546/auth
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: nanda1995/client
+      # image: us.gcr.io/pacific-destiny-15416546/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.js'
+            dest: .
+    - image: nanda1995/tickets
+      # image: us.gcr.io/pacific-destiny-15416546/tickets
+      context: tickets
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: nanda1995/orders
+      # image: us.gcr.io/pacific-destiny-15416546/orders
+      context: orders
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: nanda1995/expiration
+      # image: us.gcr.io/pacific-destiny-15416546/expiration
+      context: expiration
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: nanda1995/payments
+      # image: us.gcr.io/pacific-destiny-15416546/payments
+      context: payments
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+#! Update the hosts file to point to the remote cluster
+#! Enter IP address of the Load Balancer that was created by the Ingress Nginx step in the hosts file
+#? Step 1 - https://cloud.google.com/free
+#? Step 2 - cloud.google.com/sdk/docs/quickstarts
+#? Step 3 - gcloud auth login
+#? Step 4 - gcloud init
+#? Step 5 - gcloud container clusters get-credentials <cluster name>
+#? Step 6 - Enable Google cloud build
+#? Step 7 - Update the skaffold.yml file to use Google cloud build
+#? Step 8 - Setup ingress-nginx on our google cloud cluster
+#?          kubernetes.github.io/ingress-nginx
+#? Step 9 - Update our hosts file again to point to the remote cluster
+#? Step 10 - Restart Skaffold
